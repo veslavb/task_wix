@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image Generator</title>
+    <link type="text/css" rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="d-flex w-100 h-100">
+      <div class="image-wrapper">
+        <div class="w-100 h-100">
+          <div id="image-plceholder">Please upload an image</div>
+          <canvas id="generated-image" class="w-100 h-100"></canvas>
+        </div>
+      </div>
+
+      <div class="editing-controls">
+        <!--Image url-->
+        <div class="editing-control-item">
+          <div class="input-wrapper">
+            <input type="url" id="image-url" />
+          </div>
+          <button id="upload-image">Upload Image</button>
+        </div>
+
+        <!-- Top Text -->
+
+        <div class="editing-control-item">
+          <div class="input-wrapper">
+            <input id="top-text" />
+          </div>
+          <button id="apply-top-text">Add Top Text</button>
+        </div>
+
+        <!-- blur slider -->
+
+        <div class="editing-control-item">
+          <div class="input-wrapper">
+            <input id="blur-range" type="range" min="0" max="100" />
+          </div>
+          <button id="apply-blur">Apply Blur</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="app">
+      <div>
+        <button id="generate" type="submit">Generate image</button>
+        <div></div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main/main.ts"></script>
+  </body>
+</html>
