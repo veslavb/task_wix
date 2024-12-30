@@ -1,10 +1,12 @@
+import { ActionMessage } from "../models/action.model";
+
 export const createBackgroundProcess = () => {
   const worker = new Worker(
     new URL("../background-process/background", import.meta.url),
     { type: "module" },
   );
 
-  const sendMessage = (message: any) => {
+  const sendMessage = (message: ActionMessage) => {
     worker.postMessage(message);
   };
 

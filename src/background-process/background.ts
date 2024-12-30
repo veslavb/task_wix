@@ -1,3 +1,4 @@
+import { ActionMessage } from "../models/action.model";
 import {
   addTopTextToImage,
   applyBlurToImage,
@@ -8,30 +9,35 @@ import { createChannelToMainProcess } from "./channel";
 
 const mainProcess = createChannelToMainProcess();
 
-mainProcess.addMessageListener(async (data) => {
+mainProcess.addMessageListener(async (data: ActionMessage) => {
   console.log("Background process received message:", data);
   const img = data?.img;
   const changeValue = data?.value;
 
   let resultImage = null;
 
-  // The following code is just an example of how to use the effects.
-  // You will need to call the appropriate functions to apply the effects when needed.
   const originalImageBitmap = await createBitmapFromImageUrl(img);
 
-  if (data?.actionType === "top-text") {
-    resultImage = await addTopTextToImage(originalImageBitmap, changeValue);
+  switch (data?.actionType) {
+    case "top-text-filter":
+      resultImage = await addTopTextToImage(
+        originalImageBitmap,
+        changeValue as string,
+      );
+      break;
+    case "blur-filter":
+      resultImage = await applyBlurToImage(
+        originalImageBitmap,
+        changeValue as number,
+      );
+      break;
+    case "edges-filter":
+      resultImage = await applyEdgeDetectionToImage(originalImageBitmap);
+      break;
+
+    default:
+      throw new Error("Filter is not recognized");
   }
 
-  // const imageWithEdgeDetection = await applyEdgeDetectionToImage(img);
-
-  // const imageWithTopText = await addTopTextToImage(
-  //   imageWithEdgeDetection,
-  //   "TOP TEXT",
-  // );
-
-  // const imageWithBlur = await applyBlurToImage(imageWithTopText, 5);
-
-  // The modified image is sent back to the main process.
   mainProcess.sendMessage(resultImage);
 });

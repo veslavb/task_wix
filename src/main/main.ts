@@ -1,3 +1,4 @@
+import { ActionType } from "../models/action.model";
 import { drawImageBitmap } from "../utils/canvas";
 import { createBackgroundProcess } from "./channel";
 
@@ -24,17 +25,17 @@ function uploadImage() {
   }
 }
 
-async function applyAction(action: string, value: string | number) {
+async function applyAction(actionType: ActionType, value?: string | number) {
   const canvas = document.getElementById(
     "generated-image",
   ) as HTMLCanvasElement;
 
-  const str = canvas.toDataURL();
+  const img = canvas.toDataURL();
 
   sendMessage({
-    actionType: action,
-    value: value,
-    img: str,
+    actionType,
+    value,
+    img,
   });
 }
 
@@ -50,22 +51,23 @@ addMessageListener((imageBitmap: ImageBitmap) => {
 document.getElementById("upload-image")!.addEventListener("click", uploadImage);
 
 //apply top text
-document
-  .getElementById("apply-top-text")!
-  .addEventListener("click", async () => {
-    const topTextInput = document.getElementById(
-      "top-text",
-    ) as HTMLInputElement;
+document.getElementById("apply-top-text")!.addEventListener("click", () => {
+  const topTextInput = document.getElementById("top-text") as HTMLInputElement;
 
-    applyAction("top-text", topTextInput!.value);
-  });
+  applyAction("top-text-filter", topTextInput!.value);
+});
 
 //apply blur
-
-document.getElementById("apply-blur")!.addEventListener("click", async () => {
+document.getElementById("apply-blur")!.addEventListener("click", () => {
   const topTextInput = document.getElementById(
     "blur-range",
   ) as HTMLInputElement;
 
   const value = Number(topTextInput.value);
+  applyAction("blur-filter", value);
+});
+
+//apply edges
+document.getElementById("apply-edges")!.addEventListener("click", () => {
+  applyAction("edges-filter");
 });
